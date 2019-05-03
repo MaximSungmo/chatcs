@@ -29,8 +29,9 @@ public class ChatClientThread extends Thread {
 	public void run() {
 		ChatWindow chatWindow = new ChatWindow(socket, br, pr, name);
 		chatWindow.show();
+		try {
 		while (true) {
-			try {
+			
 				String data = br.readLine();
 				if (data == null) {
 					System.out.println("[Client] closed by server");
@@ -41,16 +42,24 @@ public class ChatClientThread extends Thread {
 				} else {
 					chatWindow.updateTextArea(data);
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				try {
-					socket.close();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 			}
-		}
+		}catch (IOException e) {
+			// TODO Auto-generated catch block
+			try {
+				br.close();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			System.out.println("sudden closed by server");
+		try {
+			socket.close();
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			}
+		}}
+		
 	}
-}
+
